@@ -1,14 +1,14 @@
 import React from 'react';
-import {
-  Route,
-  Switch
-} from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
-import MapPage from '../pages/Map';
+import HomePage from 'pages/Home';
+import MapPage from 'pages/Map';
 
 const Routess: React.FC = () => {
   return (
     <Switch>
+      <Route exact component={HomePage} path="/" />
+
       <Route component={MapPage} path="/map" />
     </Switch>
   );

@@ -1,10 +1,20 @@
-import React from "react";
+import React from 'react';
 
-import chevron from "assets/images/chevronDownBlack.png";
+import chevron from 'assets/images/chevronDownBlack.png';
 
-import * as S from "./styled";
+import * as S from './styles';
 
-const DropdownPage: React.FC = ({ label, options }) => (
+interface Props {
+  label: string;
+  options: [
+    {
+      value: string;
+      text: string;
+    },
+  ];
+}
+
+const DropdownPage: React.FC<Props> = ({ label, options }) => (
   <S.DropdownWrapper>
     {label && <S.Label>{label}</S.Label>}
 

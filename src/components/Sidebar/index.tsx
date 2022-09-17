@@ -4,9 +4,10 @@ import Button from "components/Button";
 
 import iconPlus from "assets/images/plus.png";
 
-import * as S from "./styled";
+import * as S from "./styles";
 
-const Sidebar = () => (
+
+const Sidebar: React.FC = () => (
   <S.SideBarWrapper>
     <S.SideBarList>
       <S.SideBarItem>?</S.SideBarItem>

@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import img from "assets/images/pageBackground.png";
+import img from 'assets/images/pageBackground.png';
 
 export const MapWrapper = styled.div`
   position: relative;
@@ -9,3 +9,4 @@ export const MapWrapper = styled.div`
   background-size: cover;
   height: 100vh;
 `;
+

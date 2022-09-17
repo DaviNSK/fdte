@@ -1,8 +1,22 @@
-import React from "react";
+import React from 'react';
 
-import * as S from "./styled";
+import * as S from './styles';
 
-const InputText: React.FC = ({ className, label, type, placeholder, name }) => (
+interface Props {
+  label?: string;
+  className?: string;
+  placeholder?: string;
+  name?: string;
+  type: string;
+}
+
+const InputText: React.FC<Props> = ({
+  className,
+  label,
+  type,
+  placeholder,
+  name,
+}) => (
   <S.InputTextWrapper className={className}>
     {label && <S.Label>{label}</S.Label>}
 
