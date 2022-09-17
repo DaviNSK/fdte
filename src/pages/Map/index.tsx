@@ -4,7 +4,7 @@ import Sidebar from "components/Sidebar";
 
 import * as S from "./styled";
 
-const MapPage = () => (
+const MapPage: React.FC = () => (
   <S.MapWrapper className="map">
     <Sidebar />
 

@@ -4,7 +4,7 @@ import chevron from "assets/images/chevronDownBlack.png";
 
 import * as S from "./styled";
 
-const DropdownPage = ({ label, options }) => (
+const DropdownPage: React.FC = ({ label, options }) => (
   <S.DropdownWrapper>
     {label && <S.Label>{label}</S.Label>}
 

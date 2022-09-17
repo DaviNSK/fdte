@@ -4,7 +4,7 @@ import chevron from "assets/images/chevronDownBlack.png";
 
 import * as S from "./styled";
 
-const InputNumber = ({ className, label, placeholder, name, suffix }) => (
+const InputNumber: React.FC = ({ className, label, placeholder, name, suffix }) => (
   <S.InputNumberWrapper className={className}>
     {label && <S.Label>{label}</S.Label>}
 
