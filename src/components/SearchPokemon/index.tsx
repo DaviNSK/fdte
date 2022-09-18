@@ -5,7 +5,7 @@ import Puppet from 'assets/images/ashFront.png';
 
 import * as S from './styles';
 import Tooltip from 'components/Tooltip';
-import { usePokemons } from 'context/pokemons';
+import { usePokemons } from 'context/Pokemons';
 
 const SearchPokemon: React.FC = () => {
   const { fetchPokemon, loading } = usePokemons();
