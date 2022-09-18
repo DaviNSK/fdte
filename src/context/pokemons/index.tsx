@@ -6,18 +6,20 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import * as T from './types';
+import { PokemonData } from './types';
 import { Dispatch, SetStateAction } from 'react';
 
 export interface ContextValue {
-  pokemonData: T.PokemonData | undefined;
-  setPokemonData: Dispatch<SetStateAction<T.PokemonData | undefined>>;
+  pokemonData: PokemonData | undefined;
+  setPokemonData: Dispatch<SetStateAction<PokemonData | undefined>>;
   fetchPokemon: (id: any) => Promise<void>;
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   openModal: string;
   setOpenModal: Dispatch<SetStateAction<string>>;
+  listPokemons: PokemonData[];
   capturePokemon: () => void;
+  imagePokemon: (value: PokemonData | undefined | null) => string;
 }
 
 export const PokemonsContext = React.createContext<ContextValue | undefined>(
@@ -25,8 +27,8 @@ export const PokemonsContext = React.createContext<ContextValue | undefined>(
 );
 
 export const PokemonsProvider: React.FC = (props) => {
-  const [pokemonData, setPokemonData] = useState<T.PokemonData>();
-  const [listPokemons, setListPokemons] = useState<T.PokemonData[]>([]);
+  const [pokemonData, setPokemonData] = useState<PokemonData>();
+  const [listPokemons, setListPokemons] = useState<PokemonData[]>([]);
   const [openModal, setOpenModal] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -62,8 +64,18 @@ export const PokemonsProvider: React.FC = (props) => {
   }, [setListPokemons, pokemonData, setOpenModal]);
 
   useEffect(() => {
-    console.log(listPokemons, pokemonData);
-  }, [listPokemons, pokemonData]);
+    const listPokemonsStorage = localStorage.getItem('listPokemons');
+
+    if (!listPokemonsStorage) return;
+
+    setListPokemons(JSON.parse(listPokemonsStorage));
+  }, []);
+
+  const imagePokemon = useCallback((value) => {
+    return value?.sprites.other
+      ? value?.sprites.other['official-artwork'].front_default
+      : value?.sprites.front_default;
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -75,6 +87,8 @@ export const PokemonsProvider: React.FC = (props) => {
       openModal,
       setOpenModal,
       capturePokemon,
+      listPokemons,
+      imagePokemon,
     }),
     [
       pokemonData,
@@ -85,6 +99,8 @@ export const PokemonsProvider: React.FC = (props) => {
       openModal,
       setOpenModal,
       capturePokemon,
+      listPokemons,
+      imagePokemon,
     ],
   );
 

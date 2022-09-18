@@ -7,7 +7,7 @@ import Close from 'assets/icons/close.svg';
 import * as S from './styles';
 
 const ViewPokemon: React.FC = () => {
-  const { pokemonData, setOpenModal, capturePokemon } = usePokemons();
+  const { pokemonData, setOpenModal, capturePokemon, imagePokemon } = usePokemons();
 
   const formatInfosBasic = useMemo(() => {
     if (!pokemonData) return;
@@ -17,12 +17,6 @@ const ViewPokemon: React.FC = () => {
 
     return { height, weight };
   }, [pokemonData]);
-
-  const imagePokemon = useMemo(() => {
-    return pokemonData?.sprites.other
-      ? pokemonData?.sprites.other['official-artwork'].front_default
-      : pokemonData?.sprites.front_default;
-  }, [pokemonData?.sprites]);
 
   const infosBasicPokemons = useMemo(() => {
     return [
@@ -56,7 +50,7 @@ const ViewPokemon: React.FC = () => {
           <img src={Close} alt="" />
         </S.Close>
         <S.CirclePokemon>
-          <S.Avatar src={imagePokemon} alt="" />
+          <S.Avatar src={imagePokemon(pokemonData)} alt="" />
         </S.CirclePokemon>
 
         <S.ListInfosPokemon>
