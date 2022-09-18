@@ -3,6 +3,11 @@ import { usePokemons } from 'context/Pokemons';
 import { PokeTypes } from 'utils/pokeColors';
 import React, { useCallback, useMemo } from 'react';
 import PokeBall from 'assets/images/pokeball.png';
+import AtackIcon from 'assets/icons/atack.svg';
+import DefenseIcon from 'assets/icons/defense.svg';
+import SpecialAtack from 'assets/icons/specialAtack.svg';
+import SpecialDefense from 'assets/icons/specialDefense.svg';
+import Speed from 'assets/icons/speed.svg';
 import Close from 'assets/icons/close.svg';
 import * as S from './styles';
 import { PokemonData } from 'context/Pokemons/types';
@@ -48,6 +53,39 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
     ];
   }, [pokemon?.stats, formatInfosBasic]);
 
+  const statisticsPokemons = useMemo(() => {
+    const stats = pokemon?.stats;
+    if (!stats) return;
+
+    return [
+      {
+        icon: DefenseIcon,
+        name: 'defesa',
+        value: stats[2].base_stat,
+      },
+      {
+        icon: AtackIcon,
+        name: 'ataque',
+        value: stats[1].base_stat,
+      },
+      {
+        icon: SpecialDefense,
+        name: 'defesa especial',
+        value: stats[4].base_stat,
+      },
+      {
+        icon: SpecialAtack,
+        name: 'ataque especial',
+        value: stats[3].base_stat,
+      },
+      {
+        icon: Speed,
+        name: 'velocidade',
+        value: stats[5].base_stat,
+      },
+    ];
+  }, [pokemon?.stats]);
+
   const getColor = useCallback((type: string) => {
     return PokeTypes[type].dafaultColor;
   }, []);
@@ -87,7 +125,12 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
             ))}
           </S.InfosBasicPokemons>
 
-          <S.ListBadges>
+          <S.NameSection>
+            <S.Divider /> TIPO
+            <S.Divider />
+          </S.NameSection>
+
+          <S.ListFlex>
             {pokemon?.types.map((item, index) => (
               <Badges
                 key={index}
@@ -95,19 +138,51 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
                 label={getTranslatedName(item.type.name)}
               />
             ))}
-          </S.ListBadges>
+          </S.ListFlex>
 
-          {isPokemonCaptured ? (
-            <Button
-              className="release-pokemon"
-              text="Liberar Pokemon"
-              onClick={deletePokemon}
-            />
-          ) : (
-            <S.PokeBall src={PokeBall} alt="" onClick={capturePokemon} />
+          <S.NameSection>
+            <S.Divider /> HABILIDADES
+            <S.Divider />
+          </S.NameSection>
+
+          <S.ListFlex>
+            {pokemon?.abilities.map((item, index) => (
+              <S.Abilities key={index}>
+                {item.ability.name}
+                {index < 1 ? ',' : ''}
+              </S.Abilities>
+            ))}
+          </S.ListFlex>
+
+          {isPokemonCaptured && (
+            <>
+              <S.NameSection>
+                <S.Divider /> ESTATÍSTICAS
+                <S.Divider />
+              </S.NameSection>
+
+              {statisticsPokemons?.map((item, index) => (
+                <S.Statistics key={index}>
+                  <S.StatisticsIcon>
+                    <img src={item.icon} alt="" />
+                  </S.StatisticsIcon>
+                  <S.StatisticsName>{item.name}</S.StatisticsName>
+                  <S.StatisticsValue>{item.value}</S.StatisticsValue>
+                </S.Statistics>
+              ))}
+            </>
           )}
         </S.ListInfosPokemon>
       </S.Content>
+      {isPokemonCaptured ? (
+        <Button
+          className="release-pokemon"
+          text="Liberar Pokemon"
+          onClick={deletePokemon}
+        />
+      ) : (
+        <S.PokeBall src={PokeBall} alt="" onClick={capturePokemon} />
+      )}
     </S.Container>
   );
 };

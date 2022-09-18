@@ -9,7 +9,8 @@ import Tooltip from 'components/Tooltip';
 import { usePokemons } from 'context/Pokemons';
 
 const SearchPokemon: React.FC = () => {
-  const { fetchPokemon, listPokemons, loading } = usePokemons();
+  const { fetchPokemon, listPokemons, loading, setIsPokemonCaptured } =
+    usePokemons();
   const [showTooltip, setShowTooltip] = useState(false);
   const [fullListPokemons, setFullListPokemons] = useState(false);
 
@@ -24,18 +25,33 @@ const SearchPokemon: React.FC = () => {
       setFullListPokemons(true);
       return;
     }
+    setFullListPokemons(false);
   }, [listPokemons, setFullListPokemons]);
 
   useEffect(() => {
     verifyListPokemons();
   }, [verifyListPokemons]);
 
+  const filteredPokemons = useCallback(
+    (id: number | undefined) => {
+      const list = listPokemons.filter((item) => item.id === id);
+
+      if (list.length > 0) {
+        setIsPokemonCaptured(true);
+        return;
+      }
+      setIsPokemonCaptured(false);
+    },
+    [listPokemons, setIsPokemonCaptured],
+  );
+
   const handleSearchPokemon = useCallback(() => {
     if (fullListPokemons) return;
 
     const id = getRandomId(1, 898);
     fetchPokemon(id);
-  }, [fetchPokemon, getRandomId, fullListPokemons]);
+    filteredPokemons(id);
+  }, [fetchPokemon, getRandomId, fullListPokemons, filteredPokemons]);
 
   const showIconTooltip = useMemo(() => {
     if (loading) {

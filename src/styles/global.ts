@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
   * {
@@ -25,6 +25,7 @@ export default createGlobalStyle`
     color: #222;
     font-family: 'Open Sans', sans-serif;
   }
+  
 
   a,
   p,
@@ -68,4 +69,4 @@ export default createGlobalStyle`
   ul {
     list-style: none;
   }
-`
+`;

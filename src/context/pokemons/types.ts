@@ -6,7 +6,7 @@ export interface PokemonData {
   sprites: SpritesTypes;
   stats: StatsTypes[];
   types: BadgeTypes[];
-  isCaptured?: boolean;
+  abilities: AbilitiesTypes[];
 }
 
 export interface SpritesTypes {
@@ -31,6 +31,13 @@ export interface BadgeTypes {
   slot: number;
   type: {
     name: string;
+  };
+}
+
+export interface AbilitiesTypes {
+  ability: {
+    name: string;
+    url: string;
   };
 }
 export interface IPokeType {
