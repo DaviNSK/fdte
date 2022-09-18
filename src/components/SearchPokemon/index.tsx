@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import IconSearch from 'assets/icons/iconSearchTooltip.svg';
 import IconLoading from 'assets/icons/iconLoadingTooltip.svg';
+import IconError from 'assets/icons/iconErrorTooltip.svg';
 import Puppet from 'assets/images/ashFront.png';
 
 import * as S from './styles';
@@ -8,8 +9,9 @@ import Tooltip from 'components/Tooltip';
 import { usePokemons } from 'context/Pokemons';
 
 const SearchPokemon: React.FC = () => {
-  const { fetchPokemon, loading } = usePokemons();
+  const { fetchPokemon, listPokemons, loading } = usePokemons();
   const [showTooltip, setShowTooltip] = useState(false);
+  const [fullListPokemons, setFullListPokemons] = useState(false);
 
   const getRandomId = useCallback((min, max) => {
     min = Math.ceil(min);
@@ -17,14 +19,42 @@ const SearchPokemon: React.FC = () => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }, []);
 
+  const verifyListPokemons = useCallback(() => {
+    if (listPokemons.length >= 6) {
+      setFullListPokemons(true);
+      return;
+    }
+  }, [listPokemons, setFullListPokemons]);
+
+  useEffect(() => {
+    verifyListPokemons();
+  }, [verifyListPokemons]);
+
+  const handleSearchPokemon = useCallback(() => {
+    if (fullListPokemons) return;
+
+    const id = getRandomId(1, 898);
+    fetchPokemon(id);
+  }, [fetchPokemon, getRandomId, fullListPokemons]);
+
+  const showIconTooltip = useMemo(() => {
+    if (loading) {
+      return IconLoading;
+    }
+
+    if (fullListPokemons) {
+      return IconError;
+    }
+
+    return IconSearch;
+  }, [loading, fullListPokemons]);
+
   return (
     <S.Search
-      onClick={() => fetchPokemon(getRandomId(1, 807))}
+      onClick={handleSearchPokemon}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}>
-      {showTooltip && (
-        <Tooltip tooltipIcon={loading ? IconLoading : IconSearch} />
-      )}
+      {showTooltip && <Tooltip tooltipIcon={showIconTooltip} />}
       <img src={Puppet} alt="" />
     </S.Search>
   );

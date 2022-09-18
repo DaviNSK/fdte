@@ -63,6 +63,16 @@ export const ListInfosPokemon = styled.div`
   min-height: 100%;
   margin-top: 150px;
   padding: 160px 24px 0px;
+
+  .release-pokemon {
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    height: 56px;
+    margin: 0 auto;
+    bottom: 58px;
+    width: 221px;
+  }
 `;
 
 export const PokemonName = styled.p`

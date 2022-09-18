@@ -18,8 +18,11 @@ export interface ContextValue {
   openModal: string;
   setOpenModal: Dispatch<SetStateAction<string>>;
   listPokemons: PokemonData[];
+  setListPokemons: Dispatch<SetStateAction<PokemonData[]>>;
   capturePokemon: () => void;
   imagePokemon: (value: PokemonData | undefined | null) => string;
+  isPokemonCaptured: boolean;
+  setIsPokemonCaptured: Dispatch<SetStateAction<boolean>>;
 }
 
 export const PokemonsContext = React.createContext<ContextValue | undefined>(
@@ -29,6 +32,7 @@ export const PokemonsContext = React.createContext<ContextValue | undefined>(
 export const PokemonsProvider: React.FC = (props) => {
   const [pokemonData, setPokemonData] = useState<PokemonData>();
   const [listPokemons, setListPokemons] = useState<PokemonData[]>([]);
+  const [isPokemonCaptured, setIsPokemonCaptured] = useState(false);
   const [openModal, setOpenModal] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -88,7 +92,10 @@ export const PokemonsProvider: React.FC = (props) => {
       setOpenModal,
       capturePokemon,
       listPokemons,
+      setListPokemons,
       imagePokemon,
+      isPokemonCaptured,
+      setIsPokemonCaptured,
     }),
     [
       pokemonData,
@@ -100,7 +107,10 @@ export const PokemonsProvider: React.FC = (props) => {
       setOpenModal,
       capturePokemon,
       listPokemons,
+      setListPokemons,
       imagePokemon,
+      isPokemonCaptured,
+      setIsPokemonCaptured,
     ],
   );
 

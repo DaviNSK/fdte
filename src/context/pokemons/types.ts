@@ -1,10 +1,12 @@
 export interface PokemonData {
+  id: number;
   name: string;
   height: number;
   weight: number;
   sprites: SpritesTypes;
   stats: StatsTypes[];
   types: BadgeTypes[];
+  isCaptured?: boolean;
 }
 
 export interface SpritesTypes {

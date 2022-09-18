@@ -5,24 +5,37 @@ import React, { useCallback, useMemo } from 'react';
 import PokeBall from 'assets/images/pokeball.png';
 import Close from 'assets/icons/close.svg';
 import * as S from './styles';
+import { PokemonData } from 'context/Pokemons/types';
+import Button from 'components/Button';
 
-const ViewPokemon: React.FC = () => {
-  const { pokemonData, setOpenModal, capturePokemon, imagePokemon } = usePokemons();
+interface Props {
+  pokemon: PokemonData | undefined;
+}
+
+const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
+  const {
+    setOpenModal,
+    capturePokemon,
+    imagePokemon,
+    isPokemonCaptured,
+    listPokemons,
+    setListPokemons,
+  } = usePokemons();
 
   const formatInfosBasic = useMemo(() => {
-    if (!pokemonData) return;
+    if (!pokemon) return;
 
-    const height = pokemonData?.height * 0.1;
-    const weight = pokemonData?.weight / 10;
+    const height = pokemon?.height * 0.1;
+    const weight = pokemon?.weight / 10;
 
     return { height, weight };
-  }, [pokemonData]);
+  }, [pokemon]);
 
   const infosBasicPokemons = useMemo(() => {
     return [
       {
         name: 'HP',
-        value: `${pokemonData?.stats[0].base_stat}/${pokemonData?.stats[0].base_stat}`,
+        value: `${pokemon?.stats[0].base_stat}/${pokemon?.stats[0].base_stat}`,
       },
       {
         name: 'ALTURA',
@@ -33,7 +46,7 @@ const ViewPokemon: React.FC = () => {
         value: `${formatInfosBasic?.weight} kg`,
       },
     ];
-  }, [pokemonData?.stats, formatInfosBasic]);
+  }, [pokemon?.stats, formatInfosBasic]);
 
   const getColor = useCallback((type: string) => {
     return PokeTypes[type].dafaultColor;
@@ -43,6 +56,15 @@ const ViewPokemon: React.FC = () => {
     return PokeTypes[type].name;
   }, []);
 
+  const deletePokemon = useCallback(() => {
+    const newArr = listPokemons.filter((item) => item.id !== pokemon?.id);
+
+    localStorage.setItem('listPokemons', JSON.stringify(newArr));
+
+    setListPokemons(newArr);
+    setOpenModal('');
+  }, [setOpenModal, listPokemons, pokemon?.id, setListPokemons]);
+
   return (
     <S.Container>
       <S.Content>
@@ -50,11 +72,11 @@ const ViewPokemon: React.FC = () => {
           <img src={Close} alt="" />
         </S.Close>
         <S.CirclePokemon>
-          <S.Avatar src={imagePokemon(pokemonData)} alt="" />
+          <S.Avatar src={imagePokemon(pokemon)} alt="" />
         </S.CirclePokemon>
 
         <S.ListInfosPokemon>
-          <S.PokemonName>{pokemonData?.name}</S.PokemonName>
+          <S.PokemonName>{pokemon?.name}</S.PokemonName>
 
           <S.InfosBasicPokemons>
             {infosBasicPokemons.map((item, index) => (
@@ -66,7 +88,7 @@ const ViewPokemon: React.FC = () => {
           </S.InfosBasicPokemons>
 
           <S.ListBadges>
-            {pokemonData?.types.map((item, index) => (
+            {pokemon?.types.map((item, index) => (
               <Badges
                 key={index}
                 color={getColor(item.type.name)}
@@ -75,7 +97,15 @@ const ViewPokemon: React.FC = () => {
             ))}
           </S.ListBadges>
 
-          <S.PokeBall src={PokeBall} alt="" onClick={capturePokemon} />
+          {isPokemonCaptured ? (
+            <Button
+              className="release-pokemon"
+              text="Liberar Pokemon"
+              onClick={deletePokemon}
+            />
+          ) : (
+            <S.PokeBall src={PokeBall} alt="" onClick={capturePokemon} />
+          )}
         </S.ListInfosPokemon>
       </S.Content>
     </S.Container>

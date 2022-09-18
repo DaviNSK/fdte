@@ -30,4 +30,6 @@ export const ButtonWrapper = styled.button`
 
 export const Icon = styled.img``;
 
-export const Text = styled.span``;
+export const Text = styled.span`
+  font-weight: 700;
+`;
