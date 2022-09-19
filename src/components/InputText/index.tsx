@@ -8,6 +8,7 @@ interface Props {
   placeholder?: string;
   name?: string;
   type: string;
+  onInput?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputText: React.FC<Props> = ({
@@ -16,11 +17,17 @@ const InputText: React.FC<Props> = ({
   type,
   placeholder,
   name,
+  onInput,
 }) => (
   <S.InputTextWrapper className={className}>
     {label && <S.Label>{label}</S.Label>}
 
-    <S.Input type={type} placeholder={placeholder} name={name} />
+    <S.Input
+      type={type}
+      placeholder={placeholder}
+      name={name}
+      onChange={onInput}
+    />
   </S.InputTextWrapper>
 );
 

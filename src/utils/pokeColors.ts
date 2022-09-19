@@ -1,6 +1,6 @@
 import { IObjectKeys } from 'context/Pokemons/types';
 
-export const PokeTypes: IObjectKeys = {
+export const pokeTypes: IObjectKeys = {
   bug: {
     name: 'inseto',
     dafaultColor: '#87950C',
@@ -74,3 +74,78 @@ export const PokeTypes: IObjectKeys = {
     dafaultColor: '#3B9BF1',
   },
 };
+
+export const pokeTypesOptions = [
+  {
+    label: 'inseto',
+    value: 'bug',
+  },
+  {
+    label: 'sombrio',
+    value: 'dark',
+  },
+  {
+    label: 'dragão',
+    value: 'dragon',
+  },
+  {
+    label: 'elétrico',
+    value: 'electric',
+  },
+  {
+    label: 'fada',
+    value: 'fairy',
+  },
+  {
+    label: 'lutador',
+    value: 'fighting',
+  },
+  {
+    label: 'fogo',
+    value: 'fire',
+  },
+  {
+    label: 'voador',
+    value: 'flying',
+  },
+  {
+    label: 'fantasma',
+    value: 'ghost',
+  },
+  {
+    label: 'grama',
+    value: 'grass',
+  },
+  {
+    label: 'terra',
+    value: 'ground',
+  },
+  {
+    label: 'gelo',
+    value: 'ice',
+  },
+  {
+    label: 'normal',
+    value: 'normal',
+  },
+  {
+    label: 'veneno',
+    value: 'poison',
+  },
+  {
+    label: 'psíquico',
+    value: 'psychic',
+  },
+  {
+    label: 'pedra',
+    value: 'rock',
+  },
+  {
+    label: 'ferro',
+    value: 'steel',
+  },
+  {
+    label: 'água',
+    value: 'water',
+  },
+];

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ButtonWrapper = styled.button`
-  padding: 1.6rem 2.4rem;
+  padding: 16px 24px;
   background-color: #ff3d71;
   border: 1px solid #ff3d71;
   border-radius: 42px;

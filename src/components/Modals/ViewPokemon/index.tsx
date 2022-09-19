@@ -1,6 +1,6 @@
 import Badges from 'components/Badges';
 import { usePokemons } from 'context/Pokemons';
-import { PokeTypes } from 'utils/pokeColors';
+import { pokeTypes } from 'utils/pokeColors';
 import React, { useCallback, useMemo } from 'react';
 import PokeBall from 'assets/images/pokeball.png';
 import AtackIcon from 'assets/icons/atack.svg';
@@ -12,6 +12,7 @@ import Close from 'assets/icons/close.svg';
 import * as S from './styles';
 import { PokemonData } from 'context/Pokemons/types';
 import Button from 'components/Button';
+import Divider from 'components/Divider';
 
 interface Props {
   pokemon: PokemonData | undefined;
@@ -87,11 +88,11 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
   }, [pokemon?.stats]);
 
   const getColor = useCallback((type: string) => {
-    return PokeTypes[type].dafaultColor;
+    return pokeTypes[type].dafaultColor;
   }, []);
 
   const getTranslatedName = useCallback((type: string) => {
-    return PokeTypes[type].name;
+    return pokeTypes[type].name;
   }, []);
 
   const deletePokemon = useCallback(() => {
@@ -125,10 +126,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
             ))}
           </S.InfosBasicPokemons>
 
-          <S.NameSection>
-            <S.Divider /> TIPO
-            <S.Divider />
-          </S.NameSection>
+          <Divider nameSection="TIPO" />
 
           <S.ListFlex>
             {pokemon?.types.map((item, index) => (
@@ -140,10 +138,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
             ))}
           </S.ListFlex>
 
-          <S.NameSection>
-            <S.Divider /> HABILIDADES
-            <S.Divider />
-          </S.NameSection>
+          <Divider nameSection="HABILIDADES" />
 
           <S.ListFlex>
             {pokemon?.abilities.map((item, index) => (
@@ -156,10 +151,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
 
           {isPokemonCaptured && (
             <>
-              <S.NameSection>
-                <S.Divider /> ESTATÍSTICAS
-                <S.Divider />
-              </S.NameSection>
+              <Divider nameSection="ESTATÍSTICAS" />
 
               {statisticsPokemons?.map((item, index) => (
                 <S.Statistics key={index}>

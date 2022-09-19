@@ -9,8 +9,13 @@ import { PokemonData } from 'context/Pokemons/types';
 import { usePokemons } from 'context/Pokemons';
 
 const Sidebar: React.FC = () => {
-  const { listPokemons, imagePokemon, setPokemonData, setOpenModal, setIsPokemonCaptured } =
-    usePokemons();
+  const {
+    listPokemons,
+    imagePokemon,
+    setPokemonData,
+    setOpenModal,
+    setIsPokemonCaptured,
+  } = usePokemons();
   const [dataSidebar, setDataSidebar] = useState<DataSidebar[]>([]);
 
   useEffect(() => {
@@ -60,7 +65,7 @@ const Sidebar: React.FC = () => {
         ))}
       </S.SideBarList>
 
-      <Button icon={iconPlus} />
+      <Button icon={iconPlus} onClick={() => setOpenModal('createPokemon')} />
     </S.SideBarWrapper>
   );
 };

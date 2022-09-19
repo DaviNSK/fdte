@@ -133,32 +133,6 @@ export const ListFlex = styled.div`
   padding: 30px 0px 35px;
 `;
 
-export const NameSection = styled.div`
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 24px;
-  text-align: center;
-  color: #2e3a59;
-  display: flex;
-  align-items: center;
-  text-transform: uppercase;
-`;
-
-export const Divider = styled.div`
-  width: 100%;
-  flex: 1;
-  background: #c5cee0;
-  height: 1px;
-
-  &:first-of-type {
-    margin-right: 12px;
-  }
-
-  &:last-of-type {
-    margin-left: 12px;
-  }
-`;
-
 export const Abilities = styled.p`
   font-weight: 700;
   font-size: 12px;
@@ -177,6 +151,7 @@ export const Statistics = styled.div`
   align-items: center;
   color: #2e3a59;
   margin-bottom: 10px;
+  margin-top: 16px;
 `;
 
 export const StatisticsName = styled.p`

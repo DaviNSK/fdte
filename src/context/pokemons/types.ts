@@ -23,12 +23,10 @@ export interface StatsTypes {
   effort: number;
   stat: {
     name: string;
-    url: string;
   };
 }
 
 export interface BadgeTypes {
-  slot: number;
   type: {
     name: string;
   };
@@ -37,7 +35,6 @@ export interface BadgeTypes {
 export interface AbilitiesTypes {
   ability: {
     name: string;
-    url: string;
   };
 }
 export interface IPokeType {

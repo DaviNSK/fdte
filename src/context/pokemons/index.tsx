@@ -10,8 +10,8 @@ import { PokemonData } from './types';
 import { Dispatch, SetStateAction } from 'react';
 
 export interface ContextValue {
-  pokemonData: PokemonData | undefined;
-  setPokemonData: Dispatch<SetStateAction<PokemonData | undefined>>;
+  pokemonData: PokemonData;
+  setPokemonData: Dispatch<SetStateAction<PokemonData>>;
   fetchPokemon: (id: any) => Promise<void>;
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
@@ -30,11 +30,47 @@ export const PokemonsContext = React.createContext<ContextValue | undefined>(
 );
 
 export const PokemonsProvider: React.FC = (props) => {
-  const [pokemonData, setPokemonData] = useState<PokemonData>();
   const [listPokemons, setListPokemons] = useState<PokemonData[]>([]);
   const [isPokemonCaptured, setIsPokemonCaptured] = useState(false);
   const [openModal, setOpenModal] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pokemonData, setPokemonData] = useState<PokemonData>({
+    id: 0,
+    name: '',
+    height: 0,
+    weight: 0,
+    sprites: {
+      front_default: '',
+      other: {
+        'official-artwork': {
+          front_default: '',
+        },
+      },
+    },
+    stats: [
+      {
+        base_stat: 0,
+        effort: 0,
+        stat: {
+          name: '',
+        },
+      },
+    ],
+    types: [
+      {
+        type: {
+          name: '',
+        },
+      },
+    ],
+    abilities: [
+      {
+        ability: {
+          name: '',
+        },
+      },
+    ],
+  });
 
   const fetchPokemon = useCallback(
     async (id) => {

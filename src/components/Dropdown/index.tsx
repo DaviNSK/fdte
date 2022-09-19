@@ -5,16 +5,14 @@ import chevron from 'assets/images/chevronDownBlack.png';
 import * as S from './styles';
 
 interface Props {
-  label: string;
-  options: [
-    {
-      value: string;
-      text: string;
-    },
-  ];
+  label?: string;
+  options: {
+    value: string;
+    text: string;
+  }[];
 }
 
-const DropdownPage: React.FC<Props> = ({ label, options }) => (
+const Dropdown: React.FC<Props> = ({ label, options }) => (
   <S.DropdownWrapper>
     {label && <S.Label>{label}</S.Label>}
 
@@ -33,4 +31,4 @@ const DropdownPage: React.FC<Props> = ({ label, options }) => (
   </S.DropdownWrapper>
 );
 
-export default DropdownPage;
+export default Dropdown;
