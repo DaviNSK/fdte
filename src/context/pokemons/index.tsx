@@ -23,6 +23,7 @@ export interface ContextValue {
   imagePokemon: (value: PokemonData | undefined | null) => string;
   isPokemonCaptured: boolean;
   setIsPokemonCaptured: Dispatch<SetStateAction<boolean>>;
+  getRandomId: (min: number, max: number) => number
 }
 
 export const PokemonsContext = React.createContext<ContextValue | undefined>(
@@ -103,6 +104,13 @@ export const PokemonsProvider: React.FC = (props) => {
     setOpenModal('');
   }, [setListPokemons, pokemonData, setOpenModal]);
 
+  const getRandomId = useCallback((min: number, max: number) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }, []);
+
+
   useEffect(() => {
     const listPokemonsStorage = localStorage.getItem('listPokemons');
 
@@ -132,6 +140,7 @@ export const PokemonsProvider: React.FC = (props) => {
       imagePokemon,
       isPokemonCaptured,
       setIsPokemonCaptured,
+      getRandomId
     }),
     [
       pokemonData,
@@ -147,6 +156,7 @@ export const PokemonsProvider: React.FC = (props) => {
       imagePokemon,
       isPokemonCaptured,
       setIsPokemonCaptured,
+      getRandomId
     ],
   );
 

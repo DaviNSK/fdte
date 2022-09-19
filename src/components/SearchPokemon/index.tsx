@@ -9,17 +9,12 @@ import Tooltip from 'components/Tooltip';
 import { usePokemons } from 'context/Pokemons';
 
 const SearchPokemon: React.FC = () => {
-  const { fetchPokemon, listPokemons, loading, setIsPokemonCaptured } =
+  const { fetchPokemon, listPokemons, loading, setIsPokemonCaptured, getRandomId } =
     usePokemons();
   const [showTooltip, setShowTooltip] = useState(false);
   const [fullListPokemons, setFullListPokemons] = useState(false);
 
-  const getRandomId = useCallback((min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }, []);
-
+  
   const verifyListPokemons = useCallback(() => {
     if (listPokemons.length >= 6) {
       setFullListPokemons(true);

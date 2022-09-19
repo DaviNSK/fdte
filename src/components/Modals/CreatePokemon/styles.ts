@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Select from 'react-select';
 
 export const Container = styled.div`
   width: 100%;
@@ -62,29 +61,4 @@ export const Avatar = styled.img`
   width: 85px;
   height: 75px;
   object-fit: cover;
-`;
-
-export const Form = styled.form`
-  width: 100%;
-  background: #f7f9fc;
-  border-radius: 24px 24px 0px 0px;
-  min-height: 100%;
-  margin-top: 150px;
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 160px 24px 68px;
-
-  .submit {
-    width: 221px;
-    height: 53px;
-    margin-top: 60px;
-  }
-`;
-
-export const SelectMulti = styled(Select)`
-  width: 100%;
-  margin-top: 24px;
-  margin-bottom: 24px;
 `;
