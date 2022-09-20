@@ -17,7 +17,7 @@ const MapPage: React.FC = () => {
         return <ViewPokemon pokemon={pokemonData} />;
       case 'createPokemon':
         return <CreatePokemon />;
-        
+
       default:
         return null;
     }

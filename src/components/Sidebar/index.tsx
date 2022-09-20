@@ -7,6 +7,7 @@ import iconPlus from 'assets/images/plus.png';
 import * as S from './styles';
 import { PokemonData } from 'context/Pokemons/types';
 import { usePokemons } from 'context/Pokemons';
+import { initialPokemonData } from 'utils/intialPokemonData';
 
 const Sidebar: React.FC = () => {
   const {
@@ -21,7 +22,6 @@ const Sidebar: React.FC = () => {
   useEffect(() => {
     setDataSidebar(() => {
       const data = [];
-
       for (let i = 0; i < MAX_ITENS; i++) {
         data.push({
           data: listPokemons[i] || null,
@@ -65,7 +65,13 @@ const Sidebar: React.FC = () => {
         ))}
       </S.SideBarList>
 
-      <Button icon={iconPlus} onClick={() => setOpenModal('createPokemon')} />
+      <Button
+        icon={iconPlus}
+        onClick={() => {
+          setPokemonData(initialPokemonData);
+          setOpenModal('createPokemon');
+        }}
+      />
     </S.SideBarWrapper>
   );
 };

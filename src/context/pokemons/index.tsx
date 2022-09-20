@@ -8,6 +8,7 @@ import React, {
 } from 'react';
 import { PokemonData } from './types';
 import { Dispatch, SetStateAction } from 'react';
+import { initialPokemonData } from 'utils/intialPokemonData';
 
 export interface ContextValue {
   pokemonData: PokemonData;
@@ -38,43 +39,7 @@ export const PokemonsProvider: React.FC = (props) => {
   const [openModal, setOpenModal] = useState('');
   const [loading, setLoading] = useState(false);
   const [editPokemon, setEditPokemon] = useState('');
-  const [pokemonData, setPokemonData] = useState<PokemonData>({
-    id: 0,
-    name: '',
-    height: 0,
-    weight: 0,
-    sprites: {
-      front_default: '',
-      other: {
-        'official-artwork': {
-          front_default: '',
-        },
-      },
-    },
-    stats: [
-      {
-        base_stat: 0,
-        effort: 0,
-        stat: {
-          name: '',
-        },
-      },
-    ],
-    types: [
-      {
-        type: {
-          name: '',
-        },
-      },
-    ],
-    abilities: [
-      {
-        ability: {
-          name: '',
-        },
-      },
-    ],
-  });
+  const [pokemonData, setPokemonData] = useState<PokemonData>(initialPokemonData);
 
   const fetchPokemon = useCallback(
     async (id) => {
@@ -177,3 +142,4 @@ export const usePokemons = (): ContextValue => {
 
   return context;
 };
+

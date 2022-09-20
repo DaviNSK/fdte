@@ -21,7 +21,7 @@ const InputText: React.FC<Props> = ({
   name,
   onInput,
   error,
-  defaultValue
+  defaultValue,
 }) => {
   return (
     <S.InputTextWrapper className={className}>
@@ -40,6 +40,5 @@ const InputText: React.FC<Props> = ({
     </S.InputTextWrapper>
   );
 };
-
 
 export default InputText;

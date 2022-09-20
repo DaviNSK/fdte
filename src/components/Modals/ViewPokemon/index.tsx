@@ -95,11 +95,11 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
   }, [pokemon?.stats]);
 
   const getColor = useCallback((type: string) => {
-    return pokeTypes[type].dafaultColor;
+    return pokeTypes[type]?.dafaultColor;
   }, []);
 
   const getTranslatedName = useCallback((type: string) => {
-    return pokeTypes[type].name;
+    return pokeTypes[type]?.name;
   }, []);
 
   const deletePokemon = useCallback(() => {
@@ -148,10 +148,10 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
   ]);
 
   useEffect(() => {
-    if(editPokemon === 'isCreated') {
+    if (editPokemon === 'isCreated') {
       setOpenModal('createPokemon');
     }
-  }, [setOpenModal, editPokemon])
+  }, [setOpenModal, editPokemon]);
 
   return (
     <S.Container>
@@ -182,7 +182,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
           ) : (
             <S.EditPokeName>
               <InputText
-              className='input-edit'
+                className="input-edit"
                 type="text"
                 defaultValue={namePokemon}
                 onInput={(e) => setNamePokemon(e.target.value)}

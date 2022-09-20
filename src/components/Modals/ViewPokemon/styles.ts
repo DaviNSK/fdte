@@ -9,6 +9,7 @@ export const Container = styled.div`
   background: rgba(0, 0, 0, 0.35);
   background-blend-mode: multiply;
   position: relative;
+  z-index: 10;
 
   .release-pokemon {
     position: absolute;
@@ -32,6 +33,12 @@ export const Content = styled.div`
   ::-webkit-scrollbar-track,
   ::-webkit-scrollbar {
     display: none;
+  }
+
+  @media(max-width: 1023px) {
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
   }
 `;
 

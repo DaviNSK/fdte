@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import Compress from 'react-image-file-resizer';
 
 import { usePokemons } from 'context/Pokemons';
-import FormCreatePokemon from 'components/FormCreatePokemon';
+import FormCreatePokemon from './FormCreatePokemon';
 
 import Plus from 'assets/images/plus.png';
 import Close from 'assets/icons/close.svg';
@@ -12,7 +12,7 @@ import * as S from './styles';
 import toast from 'react-hot-toast';
 
 const CreatePokemon: React.FC = () => {
-  const { setOpenModal, setPokemonData } = usePokemons();
+  const { setOpenModal, setPokemonData, pokemonData } = usePokemons();
   const [imageLodaded, setImageLoaded] = useState<
     string | Blob | File | ProgressEvent<FileReader>
   >();
@@ -40,7 +40,7 @@ const CreatePokemon: React.FC = () => {
                     'official-artwork': {
                       front_default: uri.toString(),
                     },
-                  }
+                  },
                 },
               }));
             },
@@ -62,7 +62,12 @@ const CreatePokemon: React.FC = () => {
         </S.Close>
         <S.CirclePokemon>
           <S.Avatar
-            src={imageLodaded ? imageLodaded.toString() : Camera}
+            src={
+              imageLodaded
+                ? imageLodaded.toString() ||
+                  pokemonData.sprites.other['official-artwork'].front_default
+                : Camera
+            }
             alt=""
           />
           {!imageLodaded && (

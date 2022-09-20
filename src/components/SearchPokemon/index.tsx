@@ -9,33 +9,25 @@ import Tooltip from 'components/Tooltip';
 import { usePokemons } from 'context/Pokemons';
 
 const SearchPokemon: React.FC = () => {
-  const { fetchPokemon, listPokemons, loading, setIsPokemonCaptured, getRandomId } =
-    usePokemons();
+  const {
+    fetchPokemon,
+    listPokemons,
+    loading,
+    setIsPokemonCaptured,
+    getRandomId,
+  } = usePokemons();
   const [showTooltip, setShowTooltip] = useState(false);
-  const [fullListPokemons, setFullListPokemons] = useState(false);
 
-  
-  const verifyListPokemons = useCallback(() => {
-    if (listPokemons.length >= 6) {
-      setFullListPokemons(true);
-      return;
-    }
-    setFullListPokemons(false);
-  }, [listPokemons, setFullListPokemons]);
-
-  useEffect(() => {
-    verifyListPokemons();
-  }, [verifyListPokemons]);
+  const fullListPokemons = useMemo(
+    () => listPokemons.length > 6,
+    [listPokemons],
+  );
 
   const filteredPokemons = useCallback(
     (id: number | undefined) => {
-      const list = listPokemons.filter((item) => item.id === id);
+      const pokemon = listPokemons.find((item) => item.id === id);
 
-      if (list.length > 0) {
-        setIsPokemonCaptured(true);
-        return;
-      }
-      setIsPokemonCaptured(false);
+      setIsPokemonCaptured(pokemon ? true : false);
     },
     [listPokemons, setIsPokemonCaptured],
   );
@@ -44,6 +36,7 @@ const SearchPokemon: React.FC = () => {
     if (fullListPokemons) return;
 
     const id = getRandomId(1, 898);
+
     fetchPokemon(id);
     filteredPokemons(id);
   }, [fetchPokemon, getRandomId, fullListPokemons, filteredPokemons]);
@@ -66,6 +59,7 @@ const SearchPokemon: React.FC = () => {
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}>
       {showTooltip && <Tooltip tooltipIcon={showIconTooltip} />}
+
       <img src={Puppet} alt="" />
     </S.Search>
   );

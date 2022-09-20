@@ -8,7 +8,7 @@ const Routess: React.FC = () => {
   return (
     <Switch>
       <Route exact component={HomePage} path="/" />
-      
+
       <Route component={MapPage} path="/map" />
 
       <Redirect to="/" />
