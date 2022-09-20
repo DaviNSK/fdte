@@ -10,6 +10,7 @@ interface Props {
   type: string;
   onInput?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean | string;
+  defaultValue?: string;
 }
 
 const InputText: React.FC<Props> = ({
@@ -20,8 +21,8 @@ const InputText: React.FC<Props> = ({
   name,
   onInput,
   error,
+  defaultValue
 }) => {
-  console.log(error, 'ss')
   return (
     <S.InputTextWrapper className={className}>
       {label && <S.Label>{label}</S.Label>}
@@ -32,6 +33,7 @@ const InputText: React.FC<Props> = ({
         name={name}
         onChange={onInput}
         error={error}
+        value={defaultValue}
       />
 
       {error && <S.Error>{error}</S.Error>}

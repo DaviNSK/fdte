@@ -1,7 +1,7 @@
 import Badges from 'components/Badges';
 import { usePokemons } from 'context/Pokemons';
 import { pokeTypes } from 'utils/pokeColors';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import PokeBall from 'assets/images/pokeball.png';
 import AtackIcon from 'assets/icons/atack.svg';
 import DefenseIcon from 'assets/icons/defense.svg';
@@ -9,10 +9,13 @@ import SpecialAtack from 'assets/icons/specialAtack.svg';
 import SpecialDefense from 'assets/icons/specialDefense.svg';
 import Speed from 'assets/icons/speed.svg';
 import Close from 'assets/icons/close.svg';
+import IconCheck from 'assets/icons/iconCheck.svg';
 import * as S from './styles';
 import { PokemonData } from 'context/Pokemons/types';
 import Button from 'components/Button';
 import Divider from 'components/Divider';
+import IconEdit from 'assets/icons/iconEdit.svg';
+import InputText from 'components/InputText';
 
 interface Props {
   pokemon: PokemonData | undefined;
@@ -26,7 +29,11 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
     isPokemonCaptured,
     listPokemons,
     setListPokemons,
+    editPokemon,
+    setEditPokemon,
+    setPokemonData,
   } = usePokemons();
+  const [namePokemon, setNamePokemon] = useState(pokemon?.name);
 
   const formatInfosBasic = useMemo(() => {
     if (!pokemon) return;
@@ -104,6 +111,48 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
     setOpenModal('');
   }, [setOpenModal, listPokemons, pokemon?.id, setListPokemons]);
 
+  const editNamePokemon = useCallback(() => {
+    if (!namePokemon) return;
+
+    const newArr = listPokemons.map((item) => {
+      if (item.id === pokemon?.id) {
+        return {
+          ...item,
+          name: namePokemon,
+        };
+      }
+
+      return item;
+    });
+    setListPokemons(newArr);
+
+    localStorage.setItem('listPokemons', JSON.stringify(newArr));
+
+    setPokemonData((prevState) => {
+      return {
+        ...prevState,
+        name: namePokemon || '',
+      };
+    });
+
+    setEditPokemon('');
+
+    return newArr;
+  }, [
+    listPokemons,
+    namePokemon,
+    pokemon?.id,
+    setEditPokemon,
+    setPokemonData,
+    setListPokemons,
+  ]);
+
+  useEffect(() => {
+    if(editPokemon === 'isCreated') {
+      setOpenModal('createPokemon');
+    }
+  }, [setOpenModal, editPokemon])
+
   return (
     <S.Container>
       <S.Content>
@@ -115,7 +164,38 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
         </S.CirclePokemon>
 
         <S.ListInfosPokemon>
-          <S.PokemonName>{pokemon?.name}</S.PokemonName>
+          {editPokemon !== 'isPokeApi' ? (
+            <S.PokemonName>
+              {pokemon?.name}{' '}
+              {pokemon && isPokemonCaptured && (
+                <S.IconEdit
+                  onClick={() =>
+                    setEditPokemon(
+                      pokemon?.id < 807 ? 'isPokeApi' : 'isCreated',
+                    )
+                  }
+                  src={IconEdit}
+                  alt=""
+                />
+              )}
+            </S.PokemonName>
+          ) : (
+            <S.EditPokeName>
+              <InputText
+              className='input-edit'
+                type="text"
+                defaultValue={namePokemon}
+                onInput={(e) => setNamePokemon(e.target.value)}
+              />
+              <S.ButtonEdit onClick={editNamePokemon}>
+                <img src={IconCheck} alt="" />
+              </S.ButtonEdit>
+
+              <S.ButtonEdit onClick={() => setEditPokemon('')}>
+                <img className="icon-button-close" src={Close} alt="" />
+              </S.ButtonEdit>
+            </S.EditPokeName>
+          )}
 
           <S.InfosBasicPokemons>
             {infosBasicPokemons.map((item, index) => (

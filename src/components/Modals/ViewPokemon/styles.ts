@@ -88,6 +88,47 @@ export const PokemonName = styled.p`
   text-align: center;
   color: #2e3a59;
   text-transform: uppercase;
+  position: relative;
+`;
+
+export const IconEdit = styled.img`
+  margin-left: 28px;
+  top: 3px;
+  position: absolute;
+  cursor: pointer;
+`;
+
+export const EditPokeName = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .input-edit {
+    margin-bottom: 0px;
+    box-shadow: 1px 7px 15px #8f9bb3;
+  }
+`;
+
+export const ButtonEdit = styled.button`
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #edf1f7;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 0.5px solid #dce0e6;
+  box-shadow: 1px 7px 15px #8f9bb3;
+
+  &:first-of-type {
+    margin: 0 8px;
+  }
+
+  .icon-button-close {
+    width: 14px;
+  }
 `;
 
 export const InfosBasicPokemons = styled.div`

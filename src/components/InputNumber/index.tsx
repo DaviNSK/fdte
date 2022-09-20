@@ -12,8 +12,9 @@ interface Props {
   suffix?: string;
   labelIcon?: string;
   rest?: any;
-  onInput?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onInput?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean | string;
+  defaultValue?: string | number;
 }
 
 const InputNumber: React.FC<Props> = ({
@@ -24,7 +25,8 @@ const InputNumber: React.FC<Props> = ({
   name,
   suffix,
   onInput,
-  error
+  error,
+  defaultValue,
 }) => (
   <S.InputNumberWrapper className={className}>
     <S.FlexLabel>
@@ -37,7 +39,14 @@ const InputNumber: React.FC<Props> = ({
     </S.FlexLabel>
 
     <S.InputContent>
-      <S.Input type="number" placeholder={placeholder} name={name} onChange={onInput} error={error} />
+      <S.Input
+        type="number"
+        placeholder={placeholder}
+        name={name}
+        onChange={onInput}
+        error={error}
+        value={defaultValue}
+      />
 
       {suffix && <S.InputSuffix>{suffix}</S.InputSuffix>}
 

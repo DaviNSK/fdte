@@ -24,6 +24,8 @@ export interface ContextValue {
   isPokemonCaptured: boolean;
   setIsPokemonCaptured: Dispatch<SetStateAction<boolean>>;
   getRandomId: (min: number, max: number) => number;
+  editPokemon: string;
+  setEditPokemon: Dispatch<SetStateAction<string>>;
 }
 
 export const PokemonsContext = React.createContext<ContextValue | undefined>(
@@ -35,6 +37,7 @@ export const PokemonsProvider: React.FC = (props) => {
   const [isPokemonCaptured, setIsPokemonCaptured] = useState(false);
   const [openModal, setOpenModal] = useState('');
   const [loading, setLoading] = useState(false);
+  const [editPokemon, setEditPokemon] = useState('');
   const [pokemonData, setPokemonData] = useState<PokemonData>({
     id: 0,
     name: '',
@@ -80,7 +83,6 @@ export const PokemonsProvider: React.FC = (props) => {
       try {
         const response = await fetchPokemonById(id);
 
-        console.log(response);
         setPokemonData(response.data);
         setLoading(false);
         setOpenModal('viewPokemon');
@@ -140,6 +142,8 @@ export const PokemonsProvider: React.FC = (props) => {
       isPokemonCaptured,
       setIsPokemonCaptured,
       getRandomId,
+      editPokemon,
+      setEditPokemon,
     }),
     [
       pokemonData,
@@ -156,6 +160,8 @@ export const PokemonsProvider: React.FC = (props) => {
       isPokemonCaptured,
       setIsPokemonCaptured,
       getRandomId,
+      editPokemon,
+      setEditPokemon,
     ],
   );
 

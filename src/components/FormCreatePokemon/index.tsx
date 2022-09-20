@@ -23,8 +23,13 @@ interface SelectedTypes {
 }
 
 const FormCreatePokemon: React.FC = () => {
-  const { setListPokemons, setPokemonData, pokemonData, getRandomId, loading, setLoading, setOpenModal } =
-    usePokemons();
+  const {
+    setListPokemons,
+    setPokemonData,
+    pokemonData,
+    getRandomId,
+    setOpenModal,
+  } = usePokemons();
   const animatedComponents = useMemo(() => makeAnimated(), []);
   const [selectedOptions, setSelectedOptions] = useState<SelectedTypes[]>([]);
   const [error, setError] = useState<{ [key: string]: string }>({});
@@ -115,8 +120,6 @@ const FormCreatePokemon: React.FC = () => {
       types: types.length > 0 ? '' : genericError,
     };
 
-    console.log(errors, 'errors');
-
     setError(errors);
 
     const hasError = Object.values(errors).find((item) => item !== '');
@@ -131,6 +134,7 @@ const FormCreatePokemon: React.FC = () => {
         placeholder: 'HP',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 0, 'hp'),
+        defaultValue: pokemonData.stats[0].base_stat,
         error: error.hp,
       },
       {
@@ -138,6 +142,7 @@ const FormCreatePokemon: React.FC = () => {
         placeholder: 'Peso',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInput(event, 'weight', true),
+        defaultValue: pokemonData.weight,
         error: error.weight,
       },
       {
@@ -145,14 +150,15 @@ const FormCreatePokemon: React.FC = () => {
         placeholder: 'Altura',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInput(event, 'height', true),
+        defaultValue: pokemonData.height,
         error: error.height,
       },
     ];
-  }, [handleInput, handleInputStats, error]);
+  }, [handleInput, handleInputStats, error, pokemonData]);
 
   useEffect(() => {
-    console.log('> pokedata', pokemonData, selectedOptions);
-  }, [pokemonData, selectedOptions]);
+    console.log('> pokedata', pokemonData);
+  }, [pokemonData]);
 
   const inputsAbilities = useMemo(() => {
     return [
@@ -161,15 +167,17 @@ const FormCreatePokemon: React.FC = () => {
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputAbilities(event, 0),
         error: error.ability1,
+        defaultValue: pokemonData.abilities[0].ability.name,
       },
       {
         placeholder: 'habilidade 2',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputAbilities(event, 1),
         error: error.ability2,
+        defaultValue: pokemonData.abilities[1]?.ability.name,
       },
     ];
-  }, [handleInputAbilities, error]);
+  }, [handleInputAbilities, error, pokemonData.abilities]);
 
   const inputsStatistics = useMemo(() => {
     return [
@@ -178,6 +186,7 @@ const FormCreatePokemon: React.FC = () => {
         label: 'DEFESA',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 2, 'defense'),
+        defaultValue: pokemonData.stats[2].base_stat,
         error: error.defense,
       },
       {
@@ -185,6 +194,7 @@ const FormCreatePokemon: React.FC = () => {
         label: 'ATAQUE',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 1, 'attack'),
+        defaultValue: pokemonData.stats[1].base_stat,
         error: error.attack,
       },
       {
@@ -192,6 +202,7 @@ const FormCreatePokemon: React.FC = () => {
         label: 'DEFESA ESPECIAL',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 4, 'special-defense'),
+        defaultValue: pokemonData.stats[4].base_stat,
         error: error.specialDefense,
       },
       {
@@ -199,6 +210,7 @@ const FormCreatePokemon: React.FC = () => {
         label: 'ATAQUE ESPECIAL',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 3, 'special-attack'),
+        defaultValue: pokemonData.stats[3].base_stat,
         error: error.specialAttack,
       },
       {
@@ -206,50 +218,44 @@ const FormCreatePokemon: React.FC = () => {
         label: 'VELOCIDADE',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 5, 'speed'),
+        defaultValue: pokemonData.stats[5].base_stat,
         error: error.speed,
       },
     ];
-  }, [handleInputStats, error]);
+  }, [handleInputStats, error, pokemonData.stats]);
 
   const createPokemon = useCallback(
     (e) => {
       e.preventDefault();
-      setLoading(true);
 
       setHasFirstValidate(true);
 
       if (isInvalidForm !== undefined || !hasFirstValidate) {
-        setLoading(false);
-        return;
-      } 
-
-      if (pokemonData.sprites.front_default === '') {
-        toast.error('Por favor, adicione uma imagem ao seu novo pokemon.');
-        setLoading(false);
         return;
       }
 
-      setTimeout(() => {
-        toast.success('Pokemon criado com sucesso!');
+      if (pokemonData.sprites.front_default === '') {
+        toast.error('Por favor, adicione uma imagem ao seu novo pokemon.');
+        return;
+      }
 
-        const id = getRandomId(1000, 1500);
+      const id = getRandomId(1000, 1500);
+      toast.success('Pokemon criado com sucesso!');
 
-        setPokemonData((prevState) => ({
-          ...prevState,
-          id: id,
-        }));
+      setPokemonData((prevState) => ({
+        ...prevState,
+        id: id,
+      }));
 
-        setListPokemons((prevState) => {
-          const newState = [...prevState, pokemonData];
+      setListPokemons((prevState) => {
+        const newState = [...prevState, pokemonData];
 
-          localStorage.setItem('listPokemons', JSON.stringify(newState));
+        localStorage.setItem('listPokemons', JSON.stringify(newState));
 
-          return newState;
-        });
+        return newState;
+      });
 
-        setLoading(false);
-        setOpenModal('')
-      }, 1000);
+      setOpenModal('');
     },
     [
       pokemonData,
@@ -258,8 +264,7 @@ const FormCreatePokemon: React.FC = () => {
       setPokemonData,
       isInvalidForm,
       hasFirstValidate,
-      setLoading,
-      setOpenModal
+      setOpenModal,
     ],
   );
 
@@ -286,6 +291,7 @@ const FormCreatePokemon: React.FC = () => {
         label="Nome"
         placeholder="Nome"
         type="text"
+        defaultValue={pokemonData.name}
         onInput={(event: React.ChangeEvent<HTMLInputElement>) =>
           handleInput(event, 'name')
         }
@@ -298,6 +304,7 @@ const FormCreatePokemon: React.FC = () => {
           placeholder={item.placeholder}
           onInput={item.onChange}
           error={item.error}
+          defaultValue={item.defaultValue}
         />
       ))}
 
@@ -327,6 +334,7 @@ const FormCreatePokemon: React.FC = () => {
           onInput={item.onChange}
           type="text"
           error={item.error}
+          defaultValue={item.defaultValue}
         />
       ))}
 
@@ -339,14 +347,15 @@ const FormCreatePokemon: React.FC = () => {
           labelIcon={item.icon}
           placeholder="00"
           onInput={item.onChange}
-          error={item.error}
+          error={item.error} 
+          defaultValue={item.defaultValue}
         />
       ))}
 
       <Button
         onClick={() => createPokemon}
         className="submit"
-        text={loading ? 'LOADING ...' : "CRIAR POKEMON"}
+        text={'CRIAR POKEMON'}
       />
     </S.Form>
   );
