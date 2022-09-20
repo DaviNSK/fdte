@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import Select from 'react-select';
 
+interface SelectProps {
+  error?: boolean | string;
+}
+
 export const Form = styled.form`
   width: 100%;
   background: #f7f9fc;
@@ -20,10 +24,14 @@ export const Form = styled.form`
   }
 `;
 
-export const SelectMulti = styled(Select)`
+export const SelectWrapper = styled.div`
   width: 100%;
   margin-top: 24px;
   margin-bottom: 24px;
+`;
+
+export const SelectMulti = styled(Select)<SelectProps>`
+  width: 100%;
 
   .css-1okebmr-indicatorSeparator {
     display: none;
@@ -31,7 +39,7 @@ export const SelectMulti = styled(Select)`
 
   .css-1pahdxg-control {
     box-shadow: none;
-    border: 2px solid #e4e9f2;
+    border: 2px solid ${(props) => (props.error ? '#ff3d71' : '#e4e9f2;')};
 
     &:hover {
       border: 2px solid #e4e9f2;
@@ -39,7 +47,7 @@ export const SelectMulti = styled(Select)`
   }
 
   .css-1s2u09g-control {
-    border: 2px solid #e4e9f2;
+    border: 2px solid ${(props) => (props.error ? '#ff3d71' : '#e4e9f2;')};
     border-radius: 3px;
 
     &:hover {
@@ -55,4 +63,11 @@ export const SelectMulti = styled(Select)`
     line-height: 16px;
     color: #42526e;
   }
+`;
+
+export const Error = styled.span`
+  text-align: left;
+  display: flex;
+  align-items: center;
+  color: #ff3d71;
 `;

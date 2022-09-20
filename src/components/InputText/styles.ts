@@ -1,4 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+
+interface InputProps {
+  error?: boolean | string;
+}
 
 export const InputTextWrapper = styled.div`
   display: flex;
@@ -16,13 +20,13 @@ export const Label = styled.label`
   color: #2e3a59;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<InputProps>`
   width: 100%;
   font-weight: 700;
   font-size: 1.6rem;
   padding: 1.2rem 0 1.2rem 0.8rem;
   background: #ffffff;
-  border: 2px solid #e4e9f2;
+  border: 2px solid ${(props) => (props.error ? '#ff3d71' : '#e4e9f2')};
   border-radius: 3px;
   overflow: hidden;
   display: flex;
@@ -37,4 +41,11 @@ export const Input = styled.input`
     color: #c5cef4;
     font-weight: 400;
   }
+`;
+
+export const Error = styled.span`
+  text-align: left;
+  display: flex;
+  align-items: center;
+  color: #ff3d71;
 `;

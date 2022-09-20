@@ -13,6 +13,7 @@ interface Props {
   labelIcon?: string;
   rest?: any;
   onInput?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  error?: boolean | string;
 }
 
 const InputNumber: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const InputNumber: React.FC<Props> = ({
   name,
   suffix,
   onInput,
+  error
 }) => (
   <S.InputNumberWrapper className={className}>
     <S.FlexLabel>
@@ -35,7 +37,7 @@ const InputNumber: React.FC<Props> = ({
     </S.FlexLabel>
 
     <S.InputContent>
-      <S.Input type="number" placeholder={placeholder} name={name} onChange={onInput} />
+      <S.Input type="number" placeholder={placeholder} name={name} onChange={onInput} error={error} />
 
       {suffix && <S.InputSuffix>{suffix}</S.InputSuffix>}
 
@@ -44,6 +46,7 @@ const InputNumber: React.FC<Props> = ({
         <S.Arrow src={chevron} className="decrease" alt="Menos" />
       </S.InputActions>
     </S.InputContent>
+    {error && <S.Error>{error}</S.Error>}
   </S.InputNumberWrapper>
 );
 

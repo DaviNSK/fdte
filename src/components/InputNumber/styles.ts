@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface InputProps {
+  error?: boolean | string;
+}
+
 export const InputNumberWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -33,13 +37,13 @@ export const InputContent = styled.div`
   position: relative;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<InputProps>`
   width: 100%;
   font-weight: 700;
   font-size: 1.6rem;
   padding: 1.2rem 0 1.2rem 0.8rem;
   background: #ffffff;
-  border: 2px solid #e4e9f2;
+  border: 2px solid ${(props) => (props.error ? '#ff3d71' : '#e4e9f2')};
   border-radius: 3px;
   overflow: hidden;
   display: flex;
@@ -82,7 +86,7 @@ export const InputActions = styled.div`
   right: 2px;
   top: 50%;
   transform: translateY(-50%);
-  height: 46px;
+  height: 40px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -102,4 +106,11 @@ export const Arrow = styled.img`
   &.increase {
     transform: rotate(180deg);
   }
+`;
+
+export const Error = styled.span`
+  text-align: left;
+  display: flex;
+  align-items: center;
+  color: #ff3d71;
 `;

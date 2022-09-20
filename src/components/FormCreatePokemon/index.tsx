@@ -15,6 +15,7 @@ import SpecialDefense from 'assets/icons/specialDefense.svg';
 import Speed from 'assets/icons/speed.svg';
 
 import * as S from './styles';
+import toast from 'react-hot-toast';
 
 interface SelectedTypes {
   value: string;
@@ -22,10 +23,12 @@ interface SelectedTypes {
 }
 
 const FormCreatePokemon: React.FC = () => {
-  const { setListPokemons, setPokemonData, pokemonData, getRandomId } =
+  const { setListPokemons, setPokemonData, pokemonData, getRandomId, loading, setLoading, setOpenModal } =
     usePokemons();
   const animatedComponents = useMemo(() => makeAnimated(), []);
   const [selectedOptions, setSelectedOptions] = useState<SelectedTypes[]>([]);
+  const [error, setError] = useState<{ [key: string]: string }>({});
+  const [hasFirstValidate, setHasFirstValidate] = useState(false);
 
   const handleInput = useCallback(
     (
@@ -90,6 +93,37 @@ const FormCreatePokemon: React.FC = () => {
     [setPokemonData],
   );
 
+  const isInvalidForm = useMemo(() => {
+    const { name, weight, height, stats, abilities, types } = pokemonData;
+
+    const genericError = 'Campo obrigatório';
+
+    if (!hasFirstValidate) return;
+
+    const errors = {
+      name: name ? '' : genericError,
+      weight: weight ? '' : genericError,
+      height: height ? '' : genericError,
+      hp: stats[0].base_stat > 0 ? '' : genericError,
+      attack: stats[1]?.base_stat ? '' : genericError,
+      defense: stats[2]?.base_stat ? '' : genericError,
+      specialAttack: stats[3]?.base_stat ? '' : genericError,
+      specialDefense: stats[4]?.base_stat ? '' : genericError,
+      speed: stats[5]?.base_stat ? '' : genericError,
+      ability1: abilities[0].ability.name ? '' : genericError,
+      ability2: abilities[1] && abilities[1].ability.name ? '' : genericError,
+      types: types.length > 0 ? '' : genericError,
+    };
+
+    console.log(errors, 'errors');
+
+    setError(errors);
+
+    const hasError = Object.values(errors).find((item) => item !== '');
+
+    return hasError;
+  }, [pokemonData, hasFirstValidate]);
+
   const inputsBasicsInfos = useMemo(() => {
     return [
       {
@@ -97,21 +131,24 @@ const FormCreatePokemon: React.FC = () => {
         placeholder: 'HP',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 0, 'hp'),
+        error: error.hp,
       },
       {
         label: 'PESO',
         placeholder: 'Peso',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInput(event, 'weight', true),
+        error: error.weight,
       },
       {
         label: 'ALTURA',
         placeholder: 'Altura',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInput(event, 'height', true),
+        error: error.height,
       },
     ];
-  }, [handleInput, handleInputStats]);
+  }, [handleInput, handleInputStats, error]);
 
   useEffect(() => {
     console.log('> pokedata', pokemonData, selectedOptions);
@@ -123,14 +160,16 @@ const FormCreatePokemon: React.FC = () => {
         placeholder: 'habilidade 1',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputAbilities(event, 0),
+        error: error.ability1,
       },
       {
         placeholder: 'habilidade 2',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputAbilities(event, 1),
+        error: error.ability2,
       },
     ];
-  }, [handleInputAbilities]);
+  }, [handleInputAbilities, error]);
 
   const inputsStatistics = useMemo(() => {
     return [
@@ -139,58 +178,88 @@ const FormCreatePokemon: React.FC = () => {
         label: 'DEFESA',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 2, 'defense'),
+        error: error.defense,
       },
       {
         icon: AtackIcon,
         label: 'ATAQUE',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 1, 'attack'),
+        error: error.attack,
       },
       {
         icon: SpecialDefense,
         label: 'DEFESA ESPECIAL',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 4, 'special-defense'),
+        error: error.specialDefense,
       },
       {
         icon: SpecialAtack,
         label: 'ATAQUE ESPECIAL',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 3, 'special-attack'),
+        error: error.specialAttack,
       },
       {
         icon: Speed,
         label: 'VELOCIDADE',
         onChange: (event: React.ChangeEvent<HTMLInputElement>) =>
           handleInputStats(event, 5, 'speed'),
+        error: error.speed,
       },
     ];
-  }, [handleInputStats]);
+  }, [handleInputStats, error]);
 
   const createPokemon = useCallback(
     (e) => {
       e.preventDefault();
+      setLoading(true);
 
-      const id = getRandomId(1000, 1500);
+      setHasFirstValidate(true);
 
-      setPokemonData((prevState) => ({
-        ...prevState,
-        id: id,
-      }));
+      if (isInvalidForm !== undefined || !hasFirstValidate) {
+        setLoading(false);
+        return;
+      } 
 
-      setListPokemons((prevState) => {
-        const newState = [...prevState, pokemonData];
+      if (pokemonData.sprites.front_default === '') {
+        toast.error('Por favor, adicione uma imagem ao seu novo pokemon.');
+        setLoading(false);
+        return;
+      }
 
-        localStorage.setItem('listPokemons', JSON.stringify(newState));
+      setTimeout(() => {
+        toast.success('Pokemon criado com sucesso!');
 
-        return newState;
-      });
+        const id = getRandomId(1000, 1500);
+
+        setPokemonData((prevState) => ({
+          ...prevState,
+          id: id,
+        }));
+
+        setListPokemons((prevState) => {
+          const newState = [...prevState, pokemonData];
+
+          localStorage.setItem('listPokemons', JSON.stringify(newState));
+
+          return newState;
+        });
+
+        setLoading(false);
+        setOpenModal('')
+      }, 1000);
     },
     [
       pokemonData,
       setListPokemons,
       getRandomId,
       setPokemonData,
+      isInvalidForm,
+      hasFirstValidate,
+      setLoading,
+      setOpenModal
     ],
   );
 
@@ -213,6 +282,7 @@ const FormCreatePokemon: React.FC = () => {
   return (
     <S.Form onSubmit={createPokemon}>
       <InputText
+        error={error.name || ''}
         label="Nome"
         placeholder="Nome"
         type="text"
@@ -227,20 +297,26 @@ const FormCreatePokemon: React.FC = () => {
           label={item.label}
           placeholder={item.placeholder}
           onInput={item.onChange}
+          error={item.error}
         />
       ))}
 
       <Divider nameSection="TIPO" marginBottom={'12px'} />
 
-      <S.SelectMulti
-        components={animatedComponents}
-        options={pokeTypesOptions}
-        onChange={(item: any) => setSelectedOptions(item)}
-        isMulti
-        isClearable={false}
-        isOptionDisabled={() => selectedOptions.length >= 2}
-        isSearchable={false}
-      />
+      <S.SelectWrapper>
+        <S.SelectMulti
+          error={error.types}
+          components={animatedComponents}
+          options={pokeTypesOptions}
+          onChange={(item: any) => setSelectedOptions(item)}
+          isMulti
+          aria-errormessage={error.types}
+          isClearable={false}
+          isOptionDisabled={() => selectedOptions.length >= 2}
+          isSearchable={false}
+        />
+        {error.types && <S.Error>{error.types}</S.Error>}
+      </S.SelectWrapper>
 
       <Divider nameSection="HABILIDADES" marginBottom={'12px'} />
 
@@ -250,6 +326,7 @@ const FormCreatePokemon: React.FC = () => {
           placeholder={item.placeholder}
           onInput={item.onChange}
           type="text"
+          error={item.error}
         />
       ))}
 
@@ -262,13 +339,14 @@ const FormCreatePokemon: React.FC = () => {
           labelIcon={item.icon}
           placeholder="00"
           onInput={item.onChange}
+          error={item.error}
         />
       ))}
 
       <Button
         onClick={() => createPokemon}
         className="submit"
-        text="CRIAR POKEMON"
+        text={loading ? 'LOADING ...' : "CRIAR POKEMON"}
       />
     </S.Form>
   );

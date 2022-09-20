@@ -62,3 +62,29 @@ export const Avatar = styled.img`
   height: 75px;
   object-fit: cover;
 `;
+
+export const ButtonPlus = styled.button`
+  width: 38px;
+  height: 38px;
+  background: #ff3d71;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  right: 27%;
+  bottom: 27%;
+
+  .icon-plus {
+    width: 16px;
+  }
+`;
+
+export const InputFile = styled.input`
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  opacity: 0;
+`;
