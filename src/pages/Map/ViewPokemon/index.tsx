@@ -1,7 +1,10 @@
-import Badges from 'components/Badges';
-import { usePokemons } from 'context/Pokemons';
-import { pokeTypes } from 'utils/pokeColors';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+
+import Badges from 'components/Badges';
+import InputText from 'components/InputText';
+import Button from 'components/Button';
+import Divider from 'components/Divider';
+
 import PokeBall from 'assets/images/pokeball.png';
 import AtackIcon from 'assets/icons/atack.svg';
 import DefenseIcon from 'assets/icons/defense.svg';
@@ -10,89 +13,91 @@ import SpecialDefense from 'assets/icons/specialDefense.svg';
 import Speed from 'assets/icons/speed.svg';
 import Close from 'assets/icons/close.svg';
 import IconCheck from 'assets/icons/iconCheck.svg';
-import * as S from './styles';
-import { PokemonData } from 'context/Pokemons/types';
-import Button from 'components/Button';
-import Divider from 'components/Divider';
 import IconEdit from 'assets/icons/iconEdit.svg';
-import InputText from 'components/InputText';
 
-interface Props {
-  pokemon: PokemonData | undefined;
-}
+import pokemonImage from 'utils/pokemonImage';
+import { pokeTypes } from 'utils/pokeColors';
 
-const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
+import { usePokemons } from 'context/Pokemons';
+
+import * as S from './styles';
+
+const ViewPokemon: React.FC = () => {
   const {
-    setOpenModal,
     capturePokemon,
-    imagePokemon,
-    isPokemonCaptured,
-    listPokemons,
-    setListPokemons,
+    currentPokemonIsCaptured,
+    pokemons,
+    setPokemons,
     editPokemon,
     setEditPokemon,
-    setPokemonData,
+    setCurrentPokemon,
+    currentPokemon,
+    setOpenModal,
+    closeModal
   } = usePokemons();
-  const [namePokemon, setNamePokemon] = useState(pokemon?.name);
+  const [namePokemon, setNamePokemon] = useState(currentPokemon?.name);
 
   const formatInfosBasic = useMemo(() => {
-    if (!pokemon) return;
+    const data = { height: 0, weight: 0 };
 
-    const height = pokemon?.height * 0.1;
-    const weight = pokemon?.weight / 10;
+    if (!currentPokemon) return data;
 
-    return { height, weight };
-  }, [pokemon]);
+    data.height = currentPokemon.height * 0.1;
+    data.weight = currentPokemon.weight / 10;
+
+    return data;
+  }, [currentPokemon]);
 
   const infosBasicPokemons = useMemo(() => {
     return [
       {
         name: 'HP',
-        value: `${pokemon?.stats[0].base_stat}/${pokemon?.stats[0].base_stat}`,
+        value: `${currentPokemon?.stats[0].base_stat}/${currentPokemon?.stats[0].base_stat}`,
       },
       {
         name: 'ALTURA',
-        value: `${formatInfosBasic?.height.toFixed(2)} m`,
+        value: `${formatInfosBasic.height.toFixed(2)} m`,
       },
       {
         name: 'PESO',
-        value: `${formatInfosBasic?.weight} kg`,
+        value: `${formatInfosBasic.weight} kg`,
       },
     ];
-  }, [pokemon?.stats, formatInfosBasic]);
+  }, [currentPokemon?.stats, formatInfosBasic]);
 
   const statisticsPokemons = useMemo(() => {
-    const stats = pokemon?.stats;
+    const stats = currentPokemon?.stats;
+
     if (!stats) return;
 
     return [
       {
         icon: DefenseIcon,
         name: 'defesa',
-        value: stats[2].base_stat,
+        value: stats[2]?.base_stat,
       },
       {
         icon: AtackIcon,
         name: 'ataque',
-        value: stats[1].base_stat,
+        value: stats[1]?.base_stat,
       },
       {
         icon: SpecialDefense,
         name: 'defesa especial',
-        value: stats[4].base_stat,
+        value: stats[4]?.base_stat,
       },
       {
         icon: SpecialAtack,
         name: 'ataque especial',
-        value: stats[3].base_stat,
+        value: stats[3]?.base_stat,
       },
       {
         icon: Speed,
         name: 'velocidade',
-        value: stats[5].base_stat,
+        value: stats[5]?.base_stat,
       },
     ];
-  }, [pokemon?.stats]);
+  }, [currentPokemon?.stats]);
 
   const getColor = useCallback((type: string) => {
     return pokeTypes[type]?.dafaultColor;
@@ -103,19 +108,19 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
   }, []);
 
   const deletePokemon = useCallback(() => {
-    const newArr = listPokemons.filter((item) => item.id !== pokemon?.id);
+    const newArr = pokemons.filter((item) => item.id !== currentPokemon?.id);
 
     localStorage.setItem('listPokemons', JSON.stringify(newArr));
 
-    setListPokemons(newArr);
-    setOpenModal('');
-  }, [setOpenModal, listPokemons, pokemon?.id, setListPokemons]);
+    setPokemons(newArr);
+    closeModal()
+  }, [closeModal, pokemons, currentPokemon?.id, setPokemons]);
 
   const editNamePokemon = useCallback(() => {
     if (!namePokemon) return;
 
-    const newArr = listPokemons.map((item) => {
-      if (item.id === pokemon?.id) {
+    const newArr = pokemons.map((item) => {
+      if (item.id === currentPokemon?.id) {
         return {
           ...item,
           name: namePokemon,
@@ -124,11 +129,11 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
 
       return item;
     });
-    setListPokemons(newArr);
+    setPokemons(newArr);
 
     localStorage.setItem('listPokemons', JSON.stringify(newArr));
 
-    setPokemonData((prevState) => {
+    setCurrentPokemon((prevState) => {
       return {
         ...prevState,
         name: namePokemon || '',
@@ -139,12 +144,12 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
 
     return newArr;
   }, [
-    listPokemons,
+    pokemons,
     namePokemon,
-    pokemon?.id,
+    currentPokemon?.id,
     setEditPokemon,
-    setPokemonData,
-    setListPokemons,
+    setCurrentPokemon,
+    setPokemons,
   ]);
 
   useEffect(() => {
@@ -156,22 +161,22 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
   return (
     <S.Container>
       <S.Content>
-        <S.Close onClick={() => setOpenModal('')}>
+        <S.Close onClick={closeModal}>
           <img src={Close} alt="" />
         </S.Close>
         <S.CirclePokemon>
-          <S.Avatar src={imagePokemon(pokemon)} alt="" />
+          <S.Avatar src={pokemonImage(currentPokemon)} alt="" />
         </S.CirclePokemon>
 
         <S.ListInfosPokemon>
           {editPokemon !== 'isPokeApi' ? (
             <S.PokemonName>
-              {pokemon?.name}{' '}
-              {pokemon && isPokemonCaptured && (
+              {currentPokemon?.name}{' '}
+              {currentPokemon && currentPokemonIsCaptured && (
                 <S.IconEdit
                   onClick={() =>
                     setEditPokemon(
-                      pokemon?.id < 807 ? 'isPokeApi' : 'isCreated',
+                      currentPokemon?.id < 999 ? 'isPokeApi' : 'isCreated',
                     )
                   }
                   src={IconEdit}
@@ -209,7 +214,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
           <Divider nameSection="TIPO" />
 
           <S.ListFlex>
-            {pokemon?.types.map((item, index) => (
+            {currentPokemon?.types.map((item, index) => (
               <Badges
                 key={index}
                 color={getColor(item.type.name)}
@@ -221,7 +226,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
           <Divider nameSection="HABILIDADES" />
 
           <S.ListFlex>
-            {pokemon?.abilities.map((item, index) => (
+            {currentPokemon?.abilities.map((item, index) => (
               <S.Abilities key={index}>
                 {item.ability.name}
                 {index < 1 ? ',' : ''}
@@ -229,7 +234,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
             ))}
           </S.ListFlex>
 
-          {isPokemonCaptured && (
+          {currentPokemonIsCaptured && (
             <>
               <Divider nameSection="ESTATÍSTICAS" />
 
@@ -246,7 +251,7 @@ const ViewPokemon: React.FC<Props> = ({ pokemon }) => {
           )}
         </S.ListInfosPokemon>
       </S.Content>
-      {isPokemonCaptured ? (
+      {currentPokemonIsCaptured ? (
         <Button
           className="release-pokemon"
           text="Liberar Pokemon"

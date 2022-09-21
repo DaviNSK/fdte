@@ -6,10 +6,12 @@ interface Props {
   icon?: string;
   onClick?: () => void;
   className?: string;
+  disabled?: boolean;
 }
 
-const Button: React.FC<Props> = ({ text, icon, onClick, className }) => (
+const Button: React.FC<Props> = ({ text, icon, onClick, className, disabled }) => (
   <S.ButtonWrapper
+    disabled={disabled}
     className={`${icon ? 'icon' : ''} ${className}`}
     onClick={onClick}>
     {icon ? <S.Icon src={icon} /> : <S.Text>{text}</S.Text>}

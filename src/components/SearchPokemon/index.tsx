@@ -1,36 +1,21 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+
+import Tooltip from 'components/Tooltip';
+
+import { usePokemons } from 'context/Pokemons';
+
+import getRandomId from 'utils/randomId';
+
 import IconSearch from 'assets/icons/iconSearchTooltip.svg';
 import IconLoading from 'assets/icons/iconLoadingTooltip.svg';
 import IconError from 'assets/icons/iconErrorTooltip.svg';
 import Puppet from 'assets/images/ashFront.png';
 
 import * as S from './styles';
-import Tooltip from 'components/Tooltip';
-import { usePokemons } from 'context/Pokemons';
 
 const SearchPokemon: React.FC = () => {
-  const {
-    fetchPokemon,
-    listPokemons,
-    loading,
-    setIsPokemonCaptured,
-    getRandomId,
-  } = usePokemons();
+  const { fetchPokemon, loading, fullListPokemons } = usePokemons();
   const [showTooltip, setShowTooltip] = useState(false);
-
-  const fullListPokemons = useMemo(
-    () => listPokemons.length > 6,
-    [listPokemons],
-  );
-
-  const filteredPokemons = useCallback(
-    (id: number | undefined) => {
-      const pokemon = listPokemons.find((item) => item.id === id);
-
-      setIsPokemonCaptured(pokemon ? true : false);
-    },
-    [listPokemons, setIsPokemonCaptured],
-  );
 
   const handleSearchPokemon = useCallback(() => {
     if (fullListPokemons) return;
@@ -38,8 +23,7 @@ const SearchPokemon: React.FC = () => {
     const id = getRandomId(1, 898);
 
     fetchPokemon(id);
-    filteredPokemons(id);
-  }, [fetchPokemon, getRandomId, fullListPokemons, filteredPokemons]);
+  }, [fetchPokemon, fullListPokemons]);
 
   const showIconTooltip = useMemo(() => {
     if (loading) {

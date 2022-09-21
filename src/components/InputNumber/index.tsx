@@ -11,7 +11,6 @@ interface Props {
   name?: string;
   suffix?: string;
   labelIcon?: string;
-  rest?: any;
   onInput?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   error?: boolean | string;
   defaultValue?: string | number;
@@ -40,6 +39,7 @@ const InputNumber: React.FC<Props> = ({
 
     <S.InputContent>
       <S.Input
+        min={0}
         type="number"
         placeholder={placeholder}
         name={name}

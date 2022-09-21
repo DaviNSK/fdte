@@ -12,7 +12,8 @@ import * as S from './styles';
 import toast from 'react-hot-toast';
 
 const CreatePokemon: React.FC = () => {
-  const { setOpenModal, setPokemonData, pokemonData } = usePokemons();
+  const { setCurrentPokemon, currentPokemon, closeModal} =
+    usePokemons();
   const [imageLodaded, setImageLoaded] = useState<
     string | Blob | File | ProgressEvent<FileReader>
   >();
@@ -32,7 +33,7 @@ const CreatePokemon: React.FC = () => {
             0,
             (uri) => {
               setImageLoaded(uri);
-              setPokemonData((prevState) => ({
+              setCurrentPokemon((prevState) => ({
                 ...prevState,
                 sprites: {
                   front_default: uri.toString(),
@@ -51,13 +52,14 @@ const CreatePokemon: React.FC = () => {
         toast.error('Inserir Imagem Com Formato JPG ou PNG');
       }
     },
-    [setPokemonData, setImageLoaded],
+    [setCurrentPokemon, setImageLoaded],
   );
 
   return (
     <S.Container>
       <S.Content>
-        <S.Close onClick={() => setOpenModal('')}>
+        <S.Close
+          onClick={closeModal}>
           <img src={Close} alt="" />
         </S.Close>
         <S.CirclePokemon>
@@ -65,7 +67,7 @@ const CreatePokemon: React.FC = () => {
             src={
               imageLodaded
                 ? imageLodaded.toString() ||
-                  pokemonData.sprites.other['official-artwork'].front_default
+                  currentPokemon.sprites.other['official-artwork'].front_default
                 : Camera
             }
             alt=""

@@ -8,7 +8,7 @@ export const Container = styled.div`
   align-items: center;
   background: rgba(0, 0, 0, 0.35);
   background-blend-mode: multiply;
-  position: relative;
+  position: fixed;
   z-index: 10;
 `;
 

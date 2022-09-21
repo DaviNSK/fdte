@@ -1,48 +1,37 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
+
+import { usePokemons } from 'context/Pokemons';
 
 import Button from 'components/Button';
 
 import iconPlus from 'assets/images/plus.png';
 
+import pokemonImage from 'utils/pokemonImage';
+import { initialCurrentPokemon } from 'utils/initialPokemon';
+
 import * as S from './styles';
-import { PokemonData } from 'context/Pokemons/types';
-import { usePokemons } from 'context/Pokemons';
-import { initialPokemonData } from 'utils/intialPokemonData';
 
 const Sidebar: React.FC = () => {
-  const {
-    listPokemons,
-    imagePokemon,
-    setPokemonData,
-    setOpenModal,
-    setIsPokemonCaptured,
-  } = usePokemons();
-  const [dataSidebar, setDataSidebar] = useState<DataSidebar[]>([]);
+  const { pokemons, setCurrentPokemon, setOpenModal, fullListPokemons } = usePokemons();
 
-  useEffect(() => {
-    setDataSidebar(() => {
-      const data = [];
-      for (let i = 0; i < MAX_ITENS; i++) {
-        data.push({
-          data: listPokemons[i] || null,
-        });
-      }
+  const dataSidebar = useMemo(() => {
+    const data = [];
 
-      return data;
-    });
-  }, [listPokemons]);
+    for (let i = 0; i < MAX_ITENS; i++) {
+      data.push({
+        data: pokemons[i] || null,
+      });
+    }
+
+    return data;
+  }, [pokemons]);
 
   const filteredPokemons = useCallback(
-    (id: number | undefined) => {
-      const list = listPokemons.filter((item) => item.id === id);
-
-      if (list.length > 0) {
-        setIsPokemonCaptured(true);
-        setPokemonData(list[0]);
-        setOpenModal('viewPokemon');
-      }
+    (pokemonIndex: number) => {
+      setCurrentPokemon(pokemons[pokemonIndex]);
+      setOpenModal('viewPokemon');
     },
-    [listPokemons, setPokemonData, setOpenModal, setIsPokemonCaptured],
+    [pokemons, setCurrentPokemon, setOpenModal],
   );
 
   return (
@@ -52,10 +41,10 @@ const Sidebar: React.FC = () => {
           <S.SideBarItem
             key={index}
             isEmpty={!item.data}
-            onClick={() => filteredPokemons(item.data?.id)}>
+            onClick={() => filteredPokemons(index)}>
             {item.data ? (
               <S.SideBarImage
-                src={imagePokemon(item.data)}
+                src={pokemonImage(item.data)}
                 alt={item.data.name}
               />
             ) : (
@@ -67,8 +56,9 @@ const Sidebar: React.FC = () => {
 
       <Button
         icon={iconPlus}
+        disabled={fullListPokemons}
         onClick={() => {
-          setPokemonData(initialPokemonData);
+          setCurrentPokemon(initialCurrentPokemon);
           setOpenModal('createPokemon');
         }}
       />
@@ -83,7 +73,3 @@ export default Sidebar;
 //
 
 const MAX_ITENS = 6;
-
-interface DataSidebar {
-  data: PokemonData | null;
-}
